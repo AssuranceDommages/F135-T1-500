@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz - Code de Déontologie</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .quiz-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+        .setup-screen {
+            text-align: center;
+            padding: 40px;
+        }
+        .setup-screen h1 {
+            font-size: 2.5rem;
+            color: #4a00e0;
+            margin-bottom: 30px;
+            background: linear-gradient(to right, #4a00e0, #8e2de2);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .setup-options {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .option-group {
+            text-align: left;
+            padding: 20px;
+            border-radius: 10px;
+            background: #f8f9fa;
+        }
+        .option-group h2 {
+            margin-top: 0;
+            color: #495057;
+        }
+        .option-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .option-btn {
+            padding: 10px 15px;
+            border-radius: 8px;
+            background: white;
+            border: 2px solid #dee2e6;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        .option-btn.selected {
+            background: #4a00e0;
+            color: white;
+            border-color: #4a00e0;
+        }
+        .option-btn:hover {
+            border-color: #adb5bd;
+        }
+        .start-btn {
+            margin-top: 30px;
+            padding: 15px 30px;
+            border-radius: 10px;
+            background: linear-gradient(to right, #4a00e0, #8e2de2);
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .start-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            font-size: 2.5rem;
+            color: #4a00e0;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #4a00e0, #8e2de2);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .progress-container {
+            width: 100%;
+            background-color: #e9ecef;
+            border-radius: 10px;
+            margin: 20px 0;
+            height: 10px;
+        }
+        .progress-bar {
+            height: 10px;
+            border-radius: 10px;
+            background: linear-gradient(to right, #4facfe, #00f2fe);
+            transition: width 0.5s ease;
+        }
+        .question-container {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border: 1px solid #eee;
+        }
+        .question-text {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            color: #343a40;
+        }
+        .options-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+        .option {
+            padding: 15px;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            background: white;
+        }
+        .option:hover {
+            border-color: #adb5bd;
+            transform: scale(1.02);
+        }
+        .option.selected {
+            border-color: #4a00e0;
+            background: linear-gradient(to right, #f3f0ff, #e6e0ff);
+        }
+        .option.correct {
+            border-color: #28a745;
+            background: linear-gradient(to right, #e6ffed, #d1ffdb);
+        }
+        .option.incorrect {
+            border-color: #dc3545;
+            background: linear-gradient(to right, #ffebee, #ffcdd2);
+        }
+        .option input[type="radio"],
+        .option input[type="checkbox"] {
+            margin-right: 15px;
+        }
+        .feedback {
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-weight: 500;
+        }
+        .feedback.correct {
+            background: #e6ffed;
+            border: 2px solid #28a745;
+            color: #28a745;
+        }
+        .feedback.incorrect {
+            background: #ffebee;
+            border: 2px solid #dc3545;
+            color: #dc3545;
+        }
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        .btn {
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .btn-primary {
+            background: linear-gradient(to right, #4a00e0, #8e2de2);
+            color: white;
+        }
+        .btn-primary:hover {
+            background: linear-gradient(to right, #3a00b0, #6e1dc2);
+            transform: translateY(-2px);
+        }
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+        .btn-success {
+            background: linear-gradient(to right, #28a745, #20c997);
+            color: white;
+        }
+        .btn-success:hover {
+            background: linear-gradient(to right, #218838, #17a2b8);
+            transform: translateY(-2px);
+        }
+        .btn-danger {
+            background: linear-gradient(to right, #dc3545, #fd7e14);
+            color: white;
+        }
+        .btn-danger:hover {
+            background: linear-gradient(to right, #c82333, #e36209);
+            transform: translateY(-2px);
+        }
+        .btn:disabled {
+            background: #e9ecef;
+            color: #adb5bd;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .results-container {
+            text-align: center;
+            padding: 30px;
+        }
+        .score {
+            font-size: 5rem;
+            font-weight: 700;
+            margin: 20px 0;
+        }
+        .score-excellent {
+            color: #28a745;
+        }
+        .score-good {
+            color: #ffc107;
+        }
+        .score-poor {
+            color: #dc3545;
+        }
+        .result-item {
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        .result-correct {
+            background: #e6ffed;
+            border: 2px solid #28a745;
+        }
+        .result-incorrect {
+            background: #ffebee;
+            border: 2px solid #dc3545;
+        }
+        .page-reference {
+            background: #e9ecef;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            display: inline-block;
+            margin-top: 20px;
+        }
+        .emoji {
+            font-size: 1.2em;
+            margin-right: 5px;
+        }
+        .true-false-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .true-false-btn {
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .true-btn {
+            background: #28a745;
+            color: white;
+            border: 2px solid #28a745;
+        }
+        .true-btn:hover {
+            background: #218838;
+            border-color: #218838;
+        }
+        .false-btn {
+            background: #dc3545;
+            color: white;
+            border: 2px solid #dc3545;
+        }
+        .false-btn:hover {
+            background: #c82333;
+            border-color: #c82333;
+        }
+        .true-false-btn.selected {
+            transform: scale(1.05);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container" id="quiz-app">
+        <!-- Le contenu dynamique sera généré ici par JavaScript -->
+        <div id="root"></div>
+    </div>
+
+    <script>
+        // Données complètes du quiz (300 questions)
+        const allQuestions = [
+            // Questions simples (sans options)
+            {
+                "question": "Selon l'article 58, quel comportement constitue un manquement grave exposant à la radiation ?",
+                "answer": "S'approprier de l'argent confié dans l'exercice d'un mandat",
+                "page": "17",
+                "type": "simple"
+            },
+            {
+                "question": "Quel montant maximum de couverture pour la dépollution était prévu dans l'exemple de Carl ?",
+                "answer": "10 000$",
+                "page": "15",
+                "type": "simple"
+            },
+            {
+                "question": "Quelle est la durée minimale de conservation des dossiers selon le code ?",
+                "answer": "5 ans",
+                "page": "12",
+                "type": "simple"
+            },
+            // Questions à choix multiples
+            {
+                "question": "Combien de sections comporte le Code de déontologie des experts en sinistre ?",
+                "options": ["5 sections", "8 sections", "10 sections", "12 sections"],
+                "answer": "8 sections",
+                "page": "3",
+                "type": "multiple_choice"
+            },
+            {
+                "question": "Dans quel contexte l'expert doit-il faire preuve de la plus grande intégrité ?",
+                "options": [
+                    "Lors de la rédaction des rapports",
+                    "Dans l'exercice de son mandat", 
+                    "Pendant les formations",
+                    "Lors des inspections"
+                ],
+                "answer": "Dans l'exercice de son mandat",
+                "page": "8",
+                "type": "multiple_choice"
+            },
+            {
+                "question": "Quel est le délai maximum pour remettre un rapport d'expertise ?",
+                "options": ["15 jours", "30 jours", "45 jours", "60 jours"],
+                "answer": "30 jours",
+                "page": "22",
+                "type": "multiple_choice"
+            },
+            // Questions vrai/faux
+            {
+                "question": "L'expert peut accepter des cadeaux de valeur de la part des assurés.",
+                "answer": "Faux",
+                "page": "10",
+                "type": "true_false"
+            },
+            {
+                "question": "L'expert doit maintenir ses connaissances à jour tout au long de sa carrière.",
+                "answer": "Vrai",
+                "page": "5",
+                "type": "true_false"
+            },
+            // Questions à choix multiple (plusieurs réponses possibles)
+            {
+                "question": "Quelles sont les situations où l'expert doit refuser un mandat ? (Sélectionnez toutes les réponses applicables)",
+                "options": [
+                    "Lorsqu'il a un conflit d'intérêts",
+                    "Lorsque le délai est trop court",
+                    "Lorsqu'il n'a pas les compétences nécessaires",
+                    "Lorsque l'assuré est un ami"
+                ],
+                "answer": ["Lorsqu'il a un conflit d'intérêts", "Lorsqu'il n'a pas les compétences nécessaires"],
+                "page": "9",
+                "type": "multi_select"
+            },
+            // Ajoutez ici les 291 autres questions...
+            // Pour l'exemple, je duplique certaines questions
+            {
+                "question": "Question 10 - Exemple de question simple",
+                "answer": "Réponse à la question 10",
+                "page": "20",
+                "type": "simple"
+            },
+            {
+                "question": "Question 11 - Exemple de choix multiple",
+                "options": ["Option A", "Option B", "Option C", "Option D"],
+                "answer": "Option B",
+                "page": "21",
+                "type": "multiple_choice"
+            },
+            // ... jusqu'à 300 questions
+        ];
+
+        // État de l'application
+        let appState = {
+            currentQuestion: 0,
+            userAnswers: {},
+            showResults: false,
+            selectedOption: '',
+            selectedOptions: [],
+            showAnswer: false,
+            answerRevealed: {},
+            selfEvaluation: {},
+            showRetryOption: false,
+            retryMode: false,
+            incorrectQuestions: [],
+            questions: [],
+            quizSettings: {
+                questionCount: 25,
+                questionTypes: {
+                    simple: true,
+                    multiple_choice: true,
+                    true_false: true,
+                    multi_select: true
+                }
+            },
+            inSetup: true
+        };
+
+        // Fonctions pour gérer l'état
+        function startQuiz() {
+            // Filtrer les questions selon les types sélectionnés
+            let filteredQuestions = allQuestions.filter(q => appState.quizSettings.questionTypes[q.type]);
+            
+            // Mélanger les questions et en sélectionner le nombre demandé
+            appState.questions = shuffleArray(filteredQuestions).slice(0, appState.quizSettings.questionCount);
+            
+            // Réinitialiser l'état du quiz
+            appState.currentQuestion = 0;
+            appState.userAnswers = {};
+            appState.showResults = false;
+            appState.selectedOption = '';
+            appState.selectedOptions = [];
+            appState.showAnswer = false;
+            appState.answerRevealed = {};
+            appState.selfEvaluation = {};
+            appState.showRetryOption = false;
+            appState.retryMode = false;
+            appState.incorrectQuestions = [];
+            appState.inSetup = false;
+            
+            renderQuiz();
+        }
+
+        function shuffleArray(array) {
+            const newArray = [...array];
+            for (let i = newArray.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+            }
+            return newArray;
+        }
+
+        function handleMultipleChoice(answer) {
+            appState.selectedOption = answer;
+            appState.userAnswers[appState.currentQuestion] = answer;
+            appState.showAnswer = true;
+            renderQuiz();
+        }
+
+        function handleMultiSelect(answer) {
+            const index = appState.selectedOptions.indexOf(answer);
+            if (index === -1) {
+                appState.selectedOptions.push(answer);
+            } else {
+                appState.selectedOptions.splice(index, 1);
+            }
+            renderQuiz();
+        }
+
+        function handleTrueFalse(answer) {
+            appState.selectedOption = answer;
+            appState.userAnswers[appState.currentQuestion] = answer;
+            appState.showAnswer = true;
+            renderQuiz();
+        }
+
+        function revealAnswer() {
+            appState.showAnswer = true;
+            appState.answerRevealed[appState.currentQuestion] = true;
+            renderQuiz();
+        }
+
+        function handleSelfEvaluation(isCorrect) {
+            appState.selfEvaluation[appState.currentQuestion] = isCorrect;
+            renderQuiz();
+        }
+
+        function nextQuestion() {
+            if (appState.currentQuestion < appState.questions.length - 1) {
+                appState.currentQuestion++;
+                appState.selectedOption = '';
+                appState.selectedOptions = [];
+                appState.showAnswer = false;
+                renderQuiz();
+            } else {
+                calculateResults();
+            }
+        }
+
+        function prevQuestion() {
+            if (appState.currentQuestion > 0) {
+                appState.currentQuestion--;
+                const prevAnswer = appState.userAnswers[appState.currentQuestion];
+                const currentQ = appState.questions[appState.currentQuestion];
+                
+                if (currentQ.type === 'multiple_choice' || currentQ.type === 'true_false') {
+                    appState.selectedOption = prevAnswer || '';
+                    appState.showAnswer = !!prevAnswer;
+                } else if (currentQ.type === 'multi_select') {
+                    appState.selectedOptions = prevAnswer || [];
+                    appState.showAnswer = !!prevAnswer;
+                } else {
+                    appState.showAnswer = appState.answerRevealed[appState.currentQuestion] || false;
+                }
+                renderQuiz();
+            }
+        }
+
+        function calculateResults() {
+            const incorrect = [];
+            appState.questions.forEach((q, index) => {
+                if (q.type === 'multiple_choice' || q.type === 'true_false') {
+                    const userAnswer = appState.userAnswers[index];
+                    if (!userAnswer || userAnswer !== q.answer) {
+                        incorrect.push(index);
+                    }
+                } else if (q.type === 'multi_select') {
+                    const userAnswer = appState.userAnswers[index] || [];
+                    const correctAnswers = Array.isArray(q.answer) ? q.answer : [q.answer];
+                    
+                    // Vérifier si les réponses sont identiques (sans tenir compte de l'ordre)
+                    const isCorrect = userAnswer.length === correctAnswers.length && 
+                                    userAnswer.every(ans => correctAnswers.includes(ans));
+                    
+                    if (!isCorrect) {
+                        incorrect.push(index);
+                    }
+                } else {
+                    if (appState.selfEvaluation[index] === false) {
+                        incorrect.push(index);
+                    }
+                }
+            });
+            
+            appState.incorrectQuestions = incorrect;
+            appState.showRetryOption = incorrect.length > 0;
+            appState.showResults = true;
+            renderQuiz();
+        }
+
+        function startRetryMode() {
+            appState.retryMode = true;
+            appState.currentQuestion = appState.incorrectQuestions[0];
+            appState.showResults = false;
+            appState.showAnswer = false;
+            appState.selectedOption = '';
+            appState.selectedOptions = [];
+            
+            const newAnswerRevealed = {...appState.answerRevealed};
+            const newSelfEvaluation = {...appState.selfEvaluation};
+            appState.incorrectQuestions.forEach(index => {
+                const q = appState.questions[index];
+                if (q.type === 'simple') {
+                    newAnswerRevealed[index] = false;
+                    delete newSelfEvaluation[index];
+                }
+            });
+            appState.answerRevealed = newAnswerRevealed;
+            appState.selfEvaluation = newSelfEvaluation;
+            renderQuiz();
+        }
+
+        function resetQuiz() {
+            appState.inSetup = true;
+            renderQuiz();
+        }
+
+        function calculateScore() {
+            let correct = 0;
+            appState.questions.forEach((q, index) => {
+                if (q.type === 'multiple_choice' || q.type === 'true_false') {
+                    const userAnswer = appState.userAnswers[index];
+                    if (userAnswer && userAnswer === q.answer) {
+                        correct++;
+                    }
+                } else if (q.type === 'multi_select') {
+                    const userAnswer = appState.userAnswers[index] || [];
+                    const correctAnswers = Array.isArray(q.answer) ? q.answer : [q.answer];
+                    
+                    const isCorrect = userAnswer.length === correctAnswers.length && 
+                                    userAnswer.every(ans => correctAnswers.includes(ans));
+                    
+                    if (isCorrect) {
+                        correct++;
+                    }
+                } else {
+                    if (appState.selfEvaluation[index] === true) {
+                        correct++;
+                    }
+                }
+            });
+            return correct;
+        }
+
+        function isAnswerCorrect(questionIndex) {
+            const q = appState.questions[questionIndex];
+            if (q.type === 'multiple_choice' || q.type === 'true_false') {
+                const userAnswer = appState.userAnswers[questionIndex];
+                return userAnswer && userAnswer === q.answer;
+            } else if (q.type === 'multi_select') {
+                const userAnswer = appState.userAnswers[questionIndex] || [];
+                const correctAnswers = Array.isArray(q.answer) ? q.answer : [q.answer];
+                
+                return userAnswer.length === correctAnswers.length && 
+                       userAnswer.every(ans => correctAnswers.includes(ans));
+            } else {
+                return appState.selfEvaluation[questionIndex] === true;
+            }
+        }
+
+        function getNextRetryQuestion() {
+            const currentRetryIndex = appState.incorrectQuestions.indexOf(appState.currentQuestion);
+            if (currentRetryIndex < appState.incorrectQuestions.length - 1) {
+                return appState.incorrectQuestions[currentRetryIndex + 1];
+            }
+            return null;
+        }
+
+        function getPrevRetryQuestion() {
+            const currentRetryIndex = appState.incorrectQuestions.indexOf(appState.currentQuestion);
+            if (currentRetryIndex > 0) {
+                return appState.incorrectQuestions[currentRetryIndex - 1];
+            }
+            return null;
+        }
+
+        function toggleQuestionType(type) {
+            appState.quizSettings.questionTypes[type] = !appState.quizSettings.questionTypes[type];
+            renderQuiz();
+        }
+
+        function setQuestionCount(count) {
+            appState.quizSettings.questionCount = count;
+            renderQuiz();
+        }
+
+        // Fonctions de rendu
+        function renderSetupScreen() {
+            return `
+                <div class="setup-screen">
+                    <h1>Configuration du Quiz</h1>
+                    
+                    <div class="setup-options">
+                        <div class="option-group">
+                            <h2>Nombre de questions</h2>
+                            <div class="option-buttons">
+                                <button onclick="setQuestionCount(25)" class="option-btn ${appState.quizSettings.questionCount === 25 ? 'selected' : ''}">25</button>
+                                <button onclick="setQuestionCount(50)" class="option-btn ${appState.quizSettings.questionCount === 50 ? 'selected' : ''}">50</button>
+                                <button onclick="setQuestionCount(100)" class="option-btn ${appState.quizSettings.questionCount === 100 ? 'selected' : ''}">100</button>
+                                <button onclick="setQuestionCount(200)" class="option-btn ${appState.quizSettings.questionCount === 200 ? 'selected' : ''}">200</button>
+                                <button onclick="setQuestionCount(300)" class="option-btn ${appState.quizSettings.questionCount === 300 ? 'selected' : ''}">300</button>
+                                <button onclick="setQuestionCount(allQuestions.length)" class="option-btn ${appState.quizSettings.questionCount === allQuestions.length ? 'selected' : ''}">Maximum (${allQuestions.length})</button>
+                            </div>
+                        </div>
+                        
+                        <div class="option-group">
+                            <h2>Types de questions</h2>
+                            <div class="option-buttons">
+                                <button onclick="toggleQuestionType('simple')" class="option-btn ${appState.quizSettings.questionTypes.simple ? 'selected' : ''}">Questions simples</button>
+                                <button onclick="toggleQuestionType('multiple_choice')" class="option-btn ${appState.quizSettings.questionTypes.multiple_choice ? 'selected' : ''}">Choix multiples</button>
+                                <button onclick="toggleQuestionType('true_false')" class="option-btn ${appState.quizSettings.questionTypes.true_false ? 'selected' : ''}">Vrai/Faux</button>
+                                <button onclick="toggleQuestionType('multi_select')" class="option-btn ${appState.quizSettings.questionTypes.multi_select ? 'selected' : ''}">Réponses multiples</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button onclick="startQuiz()" class="start-btn">Commencer le Quiz</button>
+                </div>
+            `;
+        }
+
+        function renderResults() {
+            const score = calculateScore();
+            const percentage = Math.round((score / appState.questions.length) * 100);
+            const scoreClass = percentage >= 70 ? 'score-excellent' : 
+                              percentage >= 50 ? 'score-good' : 'score-poor';
+            
+            let resultsHTML = `
+                <div class="results-container">
+                    <h2 class="header">🎉 Résultats du Quiz 🎉</h2>
+                    <div class="score ${scoreClass}">${percentage}%</div>
+                    <p class="score-text">${score} sur ${appState.questions.length} bonnes réponses</p>
+                    <div class="message">
+                        ${percentage >= 70 ? '<div>🏆 Excellent travail!</div>' : 
+                          percentage >= 50 ? '<div>👍 Bon travail!</div>' : 
+                          '<div>💪 Continue à étudier!</div>'}
+                    </div>
+                    
+                    <div class="results-list">
+            `;
+
+            appState.questions.forEach((q, index) => {
+                const isCorrect = isAnswerCorrect(index);
+                resultsHTML += `
+                    <div class="result-item ${isCorrect ? 'result-correct' : 'result-incorrect'}">
+                        <p class="question"><strong>${q.question}</strong></p>
+                `;
+
+                if (q.type === 'multiple_choice' || q.type === 'true_false') {
+                    resultsHTML += `
+                        <p>Votre réponse: <span class="user-answer">${appState.userAnswers[index] || 'Pas de réponse'}</span></p>
+                        <p>Bonne réponse: <span class="correct-answer">${q.answer}</span></p>
+                    `;
+                } else if (q.type === 'multi_select') {
+                    resultsHTML += `
+                        <p>Vos réponses: <span class="user-answer">${(appState.userAnswers[index] || []).join(', ') || 'Pas de réponse'}</span></p>
+                        <p>Bonnes réponses: <span class="correct-answer">${Array.isArray(q.answer) ? q.answer.join(', ') : q.answer}</span></p>
+                    `;
+                } else {
+                    resultsHTML += `
+                        <p>Votre auto-évaluation: <span class="evaluation">${
+                            appState.selfEvaluation[index] === true ? '✅ Correct' : 
+                            appState.selfEvaluation[index] === false ? '❌ Incorrect' : 'Non évaluée'
+                        }</span></p>
+                        <p>Réponse: <span class="correct-answer">${q.answer}</span></p>
+                    `;
+                }
+
+                resultsHTML += `
+                        <p>📄 Page: ${q.page}</p>
+                    </div>
+                `;
+            });
+
+            resultsHTML += `
+                    </div>
+                    
+                    <div class="action-buttons">
+            `;
+
+            if (appState.showRetryOption) {
+                resultsHTML += `
+                    <button onclick="startRetryMode()" class="btn btn-danger">
+                        🔄 Refaire les questions ratées (${appState.incorrectQuestions.length})
+                    </button>
+                `;
+            }
+
+            resultsHTML += `
+                        <button onclick="resetQuiz()" class="btn btn-primary">
+                            🔄 Recommencer tout le quiz
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            return resultsHTML;
+        }
+
+        function renderQuestion() {
+            const current = appState.questions[appState.currentQuestion];
+            const hasOptions = current.options && current.options.length > 0;
+            let isCorrect = false;
+            
+            if (current.type === 'multiple_choice' || current.type === 'true_false') {
+                isCorrect = appState.selectedOption === current.answer;
+            } else if (current.type === 'multi_select') {
+                const correctAnswers = Array.isArray(current.answer) ? current.answer : [current.answer];
+                isCorrect = appState.selectedOptions.length === correctAnswers.length && 
+                           appState.selectedOptions.every(ans => correctAnswers.includes(ans));
+            }
+            
+            // Navigation pour le mode retry
+            const nextRetryQuestion = getNextRetryQuestion();
+            const prevRetryQuestion = getPrevRetryQuestion();
+
+            let questionHTML = `
+                <div class="question-view">
+                    <div class="header">
+                        <h1>📚 Quiz - Code de Déontologie ${appState.retryMode ? '<span>🔄 (Rattrapage)</span>' : ''}</h1>
+                        <div class="question-counter">
+                            ${appState.retryMode ? 
+                                `Question ${appState.incorrectQuestions.indexOf(appState.currentQuestion) + 1} / ${appState.incorrectQuestions.length}` :
+                                `Question ${appState.currentQuestion + 1} / ${appState.questions.length}`
+                            }
+                        </div>
+                    </div>
+                    
+                    ${!appState.retryMode ? `
+                        <div class="progress-container">
+                            <div class="progress-bar" style="width: ${((appState.currentQuestion + 1) / appState.questions.length) * 100}%"></div>
+                        </div>
+                    ` : ''}
+                    
+                    <div class="question-container">
+                        <div class="question-text">${current.question}</div>
+            `;
+
+            if (current.type === 'multiple_choice') {
+                questionHTML += `
+                    <div class="options-container">
+                `;
+
+                current.options.forEach((option, index) => {
+                    let optionClass = 'option';
+                    if (appState.selectedOption === option) {
+                        optionClass += ' selected';
+                        if (appState.showAnswer) {
+                            optionClass += option === current.answer ? ' correct' : ' incorrect';
+                        }
+                    }
+                    
+                    questionHTML += `
+                        <div class="${optionClass}" onclick="handleMultipleChoice('${option.replace(/'/g, "\\'")}')">
+                            <input type="radio" name="answer" value="${option}" 
+                                   ${appState.selectedOption === option ? 'checked' : ''}
+                                   ${appState.showAnswer ? 'disabled' : ''}>
+                            <span>${option}</span>
+                            ${appState.showAnswer && option === current.answer ? '<span class="correct-mark">✓</span>' : ''}
+                            ${appState.showAnswer && appState.selectedOption === option && option !== current.answer ? '<span class="incorrect-mark">✗</span>' : ''}
+                        </div>
+                    `;
+                });
+
+                questionHTML += `</div>`;
+
+                if (appState.showAnswer) {
+                    questionHTML += `
+                        <div class="feedback ${isCorrect ? 'correct' : 'incorrect'}">
+                            ${isCorrect ? '🎉 Correct!' : '❌ Incorrect'}
+                            <p>La bonne réponse est: <strong>${current.answer}</strong></p>
+                        </div>
+                    `;
+                }
+            } else if (current.type === 'true_false') {
+                questionHTML += `
+                    <div class="true-false-buttons">
+                        <button onclick="handleTrueFalse('Vrai')" 
+                                class="true-false-btn true-btn ${appState.selectedOption === 'Vrai' ? 'selected' : ''}">
+                            Vrai
+                        </button>
+                        <button onclick="handleTrueFalse('Faux')" 
+                                class="true-false-btn false-btn ${appState.selectedOption === 'Faux' ? 'selected' : ''}">
+                            Faux
+                        </button>
+                    </div>
+                `;
+
+                if (appState.showAnswer) {
+                    questionHTML += `
+                        <div class="feedback ${isCorrect ? 'correct' : 'incorrect'}">
+                            ${isCorrect ? '🎉 Correct!' : '❌ Incorrect'}
+                            <p>La bonne réponse est: <strong>${current.answer}</strong></p>
+                        </div>
+                    `;
+                }
+            } else if (current.type === 'multi_select') {
+                questionHTML += `
+                    <div class="options-container">
+                        <p>Sélectionnez toutes les réponses qui s'appliquent:</p>
+                `;
+
+                current.options.forEach((option, index) => {
+                    const isSelected = appState.selectedOptions.includes(option);
+                    let optionClass = 'option';
+                    if (isSelected) {
+                        optionClass += ' selected';
+                        if (appState.showAnswer) {
+                            const isActuallyCorrect = Array.isArray(current.answer) ? 
+                                current.answer.includes(option) : 
+                                current.answer === option;
+                            optionClass += isActuallyCorrect ? ' correct' : ' incorrect';
+                        }
+                    } else if (appState.showAnswer && (Array.isArray(current.answer) ? current.answer.includes(option) : current.answer === option)) {
+                        optionClass += ' correct';
+                    }
+                    
+                    questionHTML += `
+                        <div class="${optionClass}" onclick="handleMultiSelect('${option.replace(/'/g, "\\'")}')">
+                            <input type="checkbox" 
+                                   ${isSelected ? 'checked' : ''}
+                                   ${appState.showAnswer ? 'disabled' : ''}>
+                            <span>${option}</span>
+                            ${appState.showAnswer && (Array.isArray(current.answer) ? current.answer.includes(option) : current.answer === option) ? 
+                              '<span class="correct-mark">✓</span>' : ''}
+                        </div>
+                    `;
+                });
+
+                questionHTML += `</div>`;
+
+                if (appState.showAnswer) {
+                    questionHTML += `
+                        <div class="feedback ${isCorrect ? 'correct' : 'incorrect'}">
+                            ${isCorrect ? '🎉 Toutes les bonnes réponses sélectionnées!' : '❌ Réponses incorrectes ou incomplètes'}
+                            <p>Les bonnes réponses sont: <strong>${Array.isArray(current.answer) ? current.answer.join(', ') : current.answer}</strong></p>
+                        </div>
+                    `;
+                }
+            } else { // Question simple
+                questionHTML += `
+                    <div class="text-answer-prompt">
+                        <p>🤔 Réfléchissez à votre réponse, puis cliquez pour voir la solution!</p>
+                    </div>
+                `;
+
+                if (!appState.showAnswer) {
+                    questionHTML += `
+                        <button onclick="revealAnswer()" class="btn btn-primary">
+                            👁️ Révéler la réponse
+                        </button>
+                    `;
+                } else {
+                    questionHTML += `
+                        <div class="answer-reveal">
+                            <div class="answer-container">
+                                <p>💡 Réponse:</p>
+                                <div class="correct-answer">${current.answer}</div>
+                            </div>
+                    `;
+
+                    if (appState.selfEvaluation[appState.currentQuestion] === undefined) {
+                        questionHTML += `
+                            <div class="self-evaluation">
+                                <p>🎯 Aviez-vous la bonne réponse en tête ?</p>
+                                <div class="evaluation-buttons">
+                                    <button onclick="handleSelfEvaluation(true)" class="btn btn-success">
+                                        ✅ Oui, j'avais bon!
+                                    </button>
+                                    <button onclick="handleSelfEvaluation(false)" class="btn btn-danger">
+                                        ❌ Non, j'avais faux
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        questionHTML += `
+                            <div class="evaluation-feedback ${appState.selfEvaluation[appState.currentQuestion] ? 'positive' : 'negative'}">
+                                ${appState.selfEvaluation[appState.currentQuestion] ? '🎉 Félicitations!' : '💪 À revoir!'}
+                            </div>
+                        `;
+                    }
+
+                    questionHTML += `</div>`;
+                }
+            }
+
+            questionHTML += `
+                        <div class="page-reference">
+                            📄 Page de référence: <span>${current.page}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="navigation-buttons">
+                        <button onclick="${appState.retryMode ? 
+                            (prevRetryQuestion !== null ? 
+                                `appState.currentQuestion = ${prevRetryQuestion}; appState.showAnswer = false; appState.selectedOption = ''; appState.selectedOptions = []; renderQuiz()` : 
+                                '') : 
+                            'prevQuestion()'}" 
+                            class="btn btn-secondary" 
+                            ${appState.retryMode ? (prevRetryQuestion === null ? 'disabled' : '') : 
+                              (appState.currentQuestion === 0 ? 'disabled' : '')}>
+                            ⬅️ Précédent
+                        </button>
+                        
+                        <button onclick="${appState.retryMode ? 
+                            (nextRetryQuestion !== null ? 
+                                `appState.currentQuestion = ${nextRetryQuestion}; appState.showAnswer = false; appState.selectedOption = ''; appState.selectedOptions = []; renderQuiz()` : 
+                                'calculateResults()') : 
+                            'nextQuestion()'}" 
+                            class="btn btn-primary" 
+                            ${(current.type === 'multiple_choice' || current.type === 'true_false') ? (!appState.selectedOption ? 'disabled' : '') : 
+                              (current.type === 'multi_select' ? (appState.selectedOptions.length === 0 ? 'disabled' : '') :
+                              (!appState.showAnswer || appState.selfEvaluation[appState.currentQuestion] === undefined ? 'disabled' : ''))}>
+                            ${(appState.retryMode && nextRetryQuestion === null) || 
+                              (!appState.retryMode && appState.currentQuestion === appState.questions.length - 1) ? 
+                              '🏁 Terminer' : '➡️ Suivant'}
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            return questionHTML;
+        }
+
+        function renderQuiz() {
+            const root = document.getElementById('root');
+            if (appState.inSetup) {
+                root.innerHTML = renderSetupScreen();
+            } else if (appState.showResults) {
+                root.innerHTML = renderResults();
+            } else {
+                root.innerHTML = renderQuestion();
+            }
+        }
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', () => {
+            renderQuiz();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+[
+  {
+    "question": "Selon l'article 58, quel comportement constitue un manquement grave exposant à la radiation ?",
+    "answer": "S'approprier de l'argent confié dans l'exercice d'un mandat",
+    "page": "17",
+    "type": "simple"
+  },
+  {
+    "question": "Quel montant maximum de couverture pour la dépollution était prévu dans l'exemple de Carl ?",
+    "answer": "10 000$",
+    "page": "15",
+    "type": "simple"
+  },
+  {
+    "question": "Combien de sections comporte le Code de déontologie des experts en sinistre ?",
+    "options": ["5 sections", "8 sections", "10 sections", "12 sections"],
+    "answer": "8 sections",
+    "page": "3",
+    "type": "multiple_choice"
+  },
+  {
+    "question": "Dans quel contexte l'expert doit-il faire preuve de la plus grande intégrité ?",
+    "options": [
+      "Lors de la rédaction des rapports",
+      "Dans l'exercice de son mandat",
+      "Pendant les formations",
+      "Lors des inspections"
+    ],
+    "answer": "Dans l'exercice de son mandat",
+    "page": "8",
+    "type": "multiple_choice"
+  },
+  {
+    "question": "L'expert peut accepter des cadeaux de valeur de la part des assurés.",
+    "answer": "Faux",
+    "page": "10",
+    "type": "true_false"
+  },
+  {
+    "question": "Quelles sont les situations où l'expert doit refuser un mandat ?",
+    "options": [
+      "Lorsqu'il a un conflit d'intérêts",
+      "Lorsque le délai est trop court",
+      "Lorsqu'il n'a pas les compétences nécessaires",
+      "Lorsque l'assuré est un ami"
+    ],
+    "answer": ["Lorsqu'il a un conflit d'intérêts", "Lorsqu'il n'a pas les compétences nécessaires"],
+    "page": "9",
+    "type": "multi_select"
+  }
+  // Ajoutez ici toutes vos autres questions...
+]
